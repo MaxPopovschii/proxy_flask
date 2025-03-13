@@ -1,28 +1,24 @@
-# proxy.py
 import asyncio
+import os
 import logging
 import httpx
 from flask import Flask, request, Response
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from loguru import logger
-from cachetools import TTLCache
 from dotenv import load_dotenv
-import os
+from cache.cache_manager import get_cache, is_cached, cache_response
 
 # Load environment variables
 load_dotenv()
 
 # Configuration
-CACHE_TTL = int(os.getenv("CACHE_TTL", 300))  # Default 5 min
-MAX_CACHE_SIZE = int(os.getenv("MAX_CACHE_SIZE", 100))
 RATE_LIMIT = os.getenv("RATE_LIMIT", "10/minute")  # Example: 10 requests per minute
 
 # Initialize Flask app
 app = Flask(__name__)
 limiter = Limiter(get_remote_address, app=app, default_limits=[RATE_LIMIT])
-cache = TTLCache(maxsize=MAX_CACHE_SIZE, ttl=CACHE_TTL)
-logger.add("proxy.log", rotation="10MB", level="INFO")
+logger.add("logs/proxy.log", rotation="10MB", level="INFO")
 
 async def fetch_url(method, url, headers, data, cookies):
     async with httpx.AsyncClient(http1=True) as client:
@@ -38,9 +34,11 @@ def proxy():
         return Response("Missing 'url' parameter", status=400)
     
     cache_key = f"{request.method}:{target_url}:{request.get_data()}"
-    if request.method == 'GET' and cache_key in cache:
+    
+    # Check if the response is cached
+    if request.method == 'GET' and is_cached(cache_key):
         logger.info(f"Cache hit for: {target_url}")
-        cached_response = cache[cache_key]
+        cached_response = get_cache()[cache_key]
         return Response(cached_response['content'], cached_response['status_code'], cached_response['headers'])
     
     logger.info(f"Proxying request to: {target_url}")
@@ -55,11 +53,7 @@ def proxy():
         logger.info(f"Received response with status code: {response.status_code}")
         
         if request.method == 'GET' and response.status_code == 200:
-            cache[cache_key] = {
-                'content': response.content,
-                'status_code': response.status_code,
-                'headers': dict(response.headers)
-            }
+            cache_response(cache_key, response.content, response.status_code, dict(response.headers))
             logger.info(f"Response cached for: {target_url}")
 
             if "transfer-encoding" in response.headers:

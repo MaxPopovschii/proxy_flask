@@ -12,8 +12,8 @@
 
 ### 1. Clone the repo:
 ```sh
-git clone <repo-url>
-cd proxy_server
+git clone [<repo-url>](https://github.com/MaxPopovschii/proxy_flask.git)
+cd proxy_flask
 
 2. Install dependencies:
 
@@ -43,7 +43,7 @@ Usage
 
 The proxy server listens on port 5000. You can send GET, POST, PUT, or DELETE requests to the /proxy endpoint by providing a url parameter. Example:
 
-curl "http://localhost:5000/proxy?url=https://jsonplaceholder.typicode.com/todos/1"
+curl -v "http://localhost:5000/proxy?url=https://jsonplaceholder.typicode.com/todos/1"
 
 Proxy Behavior:
 

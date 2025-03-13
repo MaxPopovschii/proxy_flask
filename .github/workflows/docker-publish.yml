@@ -55,14 +55,17 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       # Extract metadata (tags, labels) for Docker
+      - name: Generate custom tag
+        id: custom_tag
+        run: echo "TAG=build-$(date +'%Y%m%d')-$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
+
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            # Solo un singolo tag basato su data e SHA
-            type=raw,value=build-$(date +'%Y%m%d')-$(echo ${{ github.sha }} | cut -c1-7)
+            type=raw,value=${{ steps.custom_tag.outputs.TAG }}
 
       # Build and push Docker image with Buildx
       - name: Build and push Docker image

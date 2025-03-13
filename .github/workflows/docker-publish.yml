@@ -57,16 +57,12 @@ jobs:
       # Extract metadata (tags, labels) for Docker
       - name: Extract Docker metadata
         id: meta
-        uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
+        uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            # Tag standard
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
-            # Tag con data e ora
-            type=raw,value=build-{{date 'YYYYMMDDHHmmss'}}
-            # Tag con SHA breve del commit
-            type=sha,format=short
+            # Solo un singolo tag basato su data e SHA
+            type=raw,value=build-$(date +'%Y%m%d')-$(echo ${{ github.sha }} | cut -c1-7)
 
       # Build and push Docker image with Buildx
       - name: Build and push Docker image

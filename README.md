@@ -12,7 +12,7 @@
 
 ### 1. Clone the repo:
 ```sh
-git clone [<repo-url>](https://github.com/MaxPopovschii/proxy_flask.git)
+git clone https://github.com/MaxPopovschii/proxy_flask.git
 cd proxy_flask
 
 2. Install dependencies:

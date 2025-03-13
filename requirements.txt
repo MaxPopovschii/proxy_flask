@@ -1,0 +1,7 @@
+# requirements.txt
+Flask
+httpx
+cachetools
+dotenv
+loguru
+flask-limiter

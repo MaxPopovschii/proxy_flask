@@ -63,7 +63,7 @@ License
 This project is licensed under the MIT License. See the LICENSE file for more details.
 Contributing
 
-If you'd like to contribute to this project, please follow these steps:
+If you\'d like to contribute to this project, please follow these steps:
 
     Fork the repository
     Create a branch for your feature (git checkout -b feature/my-feature)

@@ -21,7 +21,7 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}  # Using the secret for Docker username
         password: ${{ secrets.DOCKER_PASSWORD }}  # Using the secret for Docker password
 
-    # Step 3: Get the latest tag from Docker Hub (or from your repository)
+    # Step 3: Get the latest tag
     - name: Get latest tag
       id: get_latest_tag
       run: |
@@ -41,6 +41,7 @@ jobs:
     # Step 4: Build Docker image with the new version tag
     - name: Build Docker image
       run: |
+        echo "Building Docker image with tag: ${{ secrets.DOCKER_USERNAME }}/proxy_flask:${{ steps.get_latest_tag.outputs.version }}"
         docker build -t ${{ secrets.DOCKER_USERNAME }}/proxy_flask:${{ steps.get_latest_tag.outputs.version }} .
         
     # Step 5: Push Docker image to Docker Hub

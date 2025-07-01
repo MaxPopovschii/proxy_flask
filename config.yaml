@@ -1,0 +1,15 @@
+residorg_mapping:
+  'https://residorg1.residorg.eu': 'http://atf-service1:8000'
+  'https://residorg2.residorg.eu': 'http://atf-service2:8000'
+  'https://residorg3.residorg.eu': 'http://atf-service3:8000'
+  'https://residorg4.residorg.eu': 'http://atf-service4:8000'
+  'https://residorg5.residorg.eu': 'http://atf-service5:8000'
+  'https://residorg6.residorg.eu': 'http://atf-service6:8000'
+  'https://residorg7.residorg.eu': 'http://atf-service7:8000'
+  'https://residorg8.residorg.eu': 'http://atf-service8:8000'
+  'https://residorg9.residorg.eu': 'http://atf-service9:8000'
+  'https://residorg10.residorg.eu': 'http://atf-service10:8000'
+
+default_service: 'http://default-atf-service:8000'
+listen_port: 10000
+listen_host: '0.0.0.0'

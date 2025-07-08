@@ -1,18 +1,23 @@
 import pytest
-from proxy_flask import app
+import json
+from proxy import create_app
 
 @pytest.fixture
 def client():
+    app = create_app()
     app.config['TESTING'] = True
     with app.test_client() as client:
         yield client
 
-def test_home(client):
-    response = client.get('/')
+def test_health_check(client):
+    response = client.get('/health')
     assert response.status_code == 200
+    data = response.get_json()
+    assert data['status'] == 'healthy'
 
-def test_proxy_endpoint(client):
-    # Sostituisci '/proxy?url=https://httpbin.org/get' con il vero endpoint del tuo proxy se diverso
-    response = client.get('/proxy?url=https://httpbin.org/get')
+def test_version_endpoint(client):
+    response = client.get('/version')
     assert response.status_code == 200
-    # Puoi aggiungere altri assert per verificare il contenuto della risposta
+    data = response.get_json()
+    assert data['platform'] == 'Residorg'
+    assert data['version'] == '3.0.1'
